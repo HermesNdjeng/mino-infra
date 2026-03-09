@@ -17,7 +17,7 @@ if [[ $# -lt 3 ]]; then
   echo "Usage: $0 <project-name> <stage> <policy-file>"
   echo ""
   echo "  <project-name>  e.g. project-conv-rag"
-  echo "  <stage>         one of: raw-documents, ocr-output, chunks, readonly"
+  echo "  <stage>         one of: raw-documents, ocr-output, readonly"
   echo "  <policy-file>   path to the IAM policy JSON"
   echo ""
   echo "Example:"

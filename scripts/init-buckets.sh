@@ -61,14 +61,13 @@ apply_policy() {
 
 # ---------------------------------------------------------------------------
 # RAG Pipeline data flow:
-#   raw-documents → ocr-output → chunks
+#   raw-documents → ocr-output → [Vector Store]
 # ---------------------------------------------------------------------------
 
 echo ""
 echo "=== project-conv-rag ==="
 create_bucket "project-conv-rag-raw-documents"
 create_bucket "project-conv-rag-ocr-output"
-create_bucket "project-conv-rag-chunks"
 
 # Enable versioning on raw-documents to protect source files
 mc version enable "${MINIO_ALIAS}/project-conv-rag-raw-documents"
