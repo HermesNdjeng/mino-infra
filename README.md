@@ -31,7 +31,7 @@ cp .env.example .env
 cd deploy/docker
 docker compose up -d
 
-# Initialize buckets and policies
+# Initialize buckets and policies (if mc not installed, do it first [text](https://github.com/minio/mc))
 cd ../../
 ./scripts/init-buckets.sh
 ```
@@ -66,6 +66,24 @@ Each project has 3 policies (in `policies/`):
 | `*-raw-documents-policy.json` | Ingestion | Write to `raw-documents` |
 | `*-ocr-output-policy.json` | OCR | Read `raw-documents`, write `ocr-output` |
 | `*-readonly-policy.json` | Retrieval | Read `raw-documents` and `ocr-output` |
+
+## Known Gotchas
+
+### `s3:GetBucketLocation` required for SDK clients
+
+The MinIO Python SDK (and other S3-compatible SDKs) calls `s3:GetBucketLocation` internally when using `bucket_exists()`. This operation is not obvious and is missing from most policy examples.
+
+**Symptom:** `AccessDenied` error when connecting with scoped credentials, but works fine with root credentials.
+
+**Fix:** Add `s3:GetBucketLocation` to the policy for every bucket the service calls `bucket_exists()` on:
+
+```json
+{
+  "Effect": "Allow",
+  "Action": ["s3:ListBucket", "s3:GetBucketLocation"],
+  "Resource": ["arn:aws:s3:::your-bucket-name"]
+}
+```
 
 ## Monitoring
 
